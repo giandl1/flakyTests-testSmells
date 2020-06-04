@@ -96,7 +96,7 @@ public class StructuralDetector {
                 if(smelly) break;
             }
         }
-        return null;
+        return fafMethods;
     }
 
     public ArrayList<MethodBean> getConditionalTestLogicMethods(ClassBean pTestSuite) {
