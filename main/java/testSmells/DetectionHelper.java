@@ -35,9 +35,9 @@ public class DetectionHelper {
     public static boolean checkFileUsage(MethodBean method, String path) {
         String text = method.getTextContent();
         String[] lines = text.split("\n");
-        for (int k = 0; k < text.length(); k++) {
-            if (lines[k].contains(" File ") && lines[k].contains("\"")) {
-                String definedPath = lines[k].substring(lines[k].indexOf("\"") + 1, lines[k].lastIndexOf("\""));
+        for (String line : lines) {
+            if (line.contains(" File ") && line.contains("\"")) {
+                String definedPath = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
                 if (definedPath.equals(path))
                     return true;
             }

@@ -25,8 +25,8 @@ public class StructuralDetector {
                             }
                         }
                     }
-                    if (!textContent.contains(fileObjectName + ".exists()") || (!textContent.contains(fileObjectName + ".isReadable()")) &&
-                            !textContent.contains(fileObjectName + ".isWritable()") && !textContent.contains(fileObjectName + ".isExecutable()")) {
+                    if (!textContent.contains(fileObjectName + ".exists()") && (!textContent.contains(fileObjectName + ".canRead()")) &&
+                            !textContent.contains(fileObjectName + ".canWrite()") && !textContent.contains(fileObjectName + ".canExecute()")) {
                         roMethods.add(testMethod);
                         break;
                     }
@@ -64,7 +64,7 @@ public class StructuralDetector {
                 if (line.contains(" File ") && line.contains("\"")) {
                     String definedPath = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")); //EXTRACT FILE PATH
                     for (MethodBean otherTestMethod : testMethods) {
-                        if (DetectionHelper.checkFileUsage(otherTestMethod, definedPath)) {
+                        if (!otherTestMethod.getName().equals(testMethod.getName()) && DetectionHelper.checkFileUsage(otherTestMethod, definedPath)) {
                             smelly=true;
                             trwMethods.add(testMethod);
                             break;
@@ -87,7 +87,7 @@ public class StructuralDetector {
             String[] lines = textContent.split("\n");
             for(MethodBean call : calls){
                 for(int k=0; k<lines.length; k++){
-                    if(lines[k].matches(" " + call.getName() + "\\s*\\(") && lines[k+1].contains("Thread.sleep")){
+                    if(lines[k].matches("\\s*" + call.getName() + "\\s*\\(.*") && lines[k+1].contains("Thread.sleep")){
                         smelly=true;
                         fafMethods.add(testMethod);
                         break;
@@ -104,7 +104,7 @@ public class StructuralDetector {
         for (MethodBean testMethod : pTestSuite.getMethods()) {
             String[] lines = testMethod.getTextContent().split("\n");
             for (String line : lines) {
-                if (line.matches(" if\\s*\\(")) {
+                if (line.matches("\\s*if\\s*\\(.*")) {
                     ctlMethods.add(testMethod);
                     break;
                 }
