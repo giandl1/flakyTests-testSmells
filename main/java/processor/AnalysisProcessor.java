@@ -2,6 +2,7 @@ package processor;
 
 import beans.AnalysisOutput;
 import beans.MethodAnalysisOutput;
+import beans.ProjectBean;
 import it.unisa.testSmellDiffusion.beans.ClassBean;
 import it.unisa.testSmellDiffusion.beans.MethodBean;
 import it.unisa.testSmellDiffusion.beans.PackageBean;
@@ -12,8 +13,10 @@ import org.eclipse.jgit.lib.TextProgressMonitor;
 import testSmells.DetectionHelper;
 import testSmells.StructuralDetector;
 import utils.GitUtility;
+import utils.MultiModuleParser;
 import utils.ReportManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -24,9 +27,10 @@ public class AnalysisProcessor {
         } catch (Exception e) {
             System.out.println("PROJECT ALREADY FOUND IN FILESYSTEM");
         }
+        ProjectBean project = MultiModuleParser.parseProject(workingDir);
+        Vector<PackageBean> packages = project.getPackages();
+        Vector<PackageBean> testPackages = project.getTestPackages();
         TestMutationUtilities utils = new TestMutationUtilities();
-        Vector<PackageBean> packages = FolderToJavaProjectConverter.convert(workingDir + "/src/main");
-        Vector<PackageBean> testPackages = FolderToJavaProjectConverter.convert(workingDir + "/src/test");
         ArrayList<ClassBean> classes = utils.getClasses(packages);
         StructuralDetector detector = new StructuralDetector();
         AnalysisOutput analysis = new AnalysisOutput();
@@ -37,7 +41,7 @@ public class AnalysisProcessor {
             if (testClass != null) {
                 ArrayList<MethodBean> ctlMethods = detector.getConditionalTestLogicMethods(testClass);
                 ArrayList<MethodBean> fafMethods = detector.getFireAndForgetMethods(testClass);
-                for(MethodBean faf : fafMethods) System.out.println(faf.getName());
+                for (MethodBean faf : fafMethods) System.out.println(faf.getName());
                 ArrayList<MethodBean> roMethods = detector.getResourceOptimismMethods(testClass);
                 ArrayList<MethodBean> trwMethods = detector.getTestRunWarMethods(testClass);
                 ArrayList<MethodBean> itMethods = detector.getIndirectTestingMethods(testClass, prodClass, DetectionHelper.findInvocations(packages));
