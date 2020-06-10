@@ -11,7 +11,8 @@ public class DetectionHelper {
     public static boolean isInProductionClass(MethodBean pMethodBean, ClassBean pProductionClass) {
 
         for (MethodBean methodBean : pProductionClass.getMethods()) {
-            return methodBean.getName().equals(pMethodBean.getName());
+            if(methodBean.getName().equals(pMethodBean.getName()))
+                return true;
         }
 
         return false;

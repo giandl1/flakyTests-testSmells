@@ -2,6 +2,7 @@ package testSmells;
 
 import it.unisa.testSmellDiffusion.beans.ClassBean;
 import it.unisa.testSmellDiffusion.beans.MethodBean;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,7 +21,7 @@ public class StructuralDetector {
                     for (int j = 0; j < splitLine.length; j++) {
                         if (splitLine[j].equals("File")) {
                             fileObjectName = splitLine[j + 1];
-                            if(fileObjectName.contains("=")){       //DELETE "=" IN CASES SUCH AS File x=("...");
+                            if (fileObjectName.contains("=")) {       //DELETE "=" IN CASES SUCH AS File x=("...");
                                 fileObjectName = fileObjectName.split("=")[0];
                             }
                         }
@@ -40,14 +41,16 @@ public class StructuralDetector {
     public ArrayList<MethodBean> getIndirectTestingMethods(ClassBean pTestSuite, ClassBean pProductionClass, Collection<MethodBean> pMethods) {
         ArrayList<MethodBean> itMethods = new ArrayList<>();
         for (MethodBean testMethod : pTestSuite.getMethods()) {
-            if (!DetectionHelper.isInProductionClass(testMethod, pTestSuite)) {
-                for (MethodBean call : pMethods) {
-                    if (call.getBelongingClass().getName().equals(pProductionClass.getName()) && call.getName().equals(testMethod.getName())) {
+            Collection<MethodBean> calls = testMethod.getMethodCalls();
+            if (calls != null && calls.size() > 0) {
+                for (MethodBean methodCall : testMethod.getMethodCalls()) {
+                    if (!DetectionHelper.isInProductionClass(methodCall, pProductionClass)) {
                         itMethods.add(testMethod);
                         break;
                     }
                 }
             }
+
         }
         return itMethods;
     }
@@ -57,7 +60,7 @@ public class StructuralDetector {
         ArrayList<MethodBean> trwMethods = new ArrayList<>();
         Collection<MethodBean> testMethods = pTestSuite.getMethods();
         for (MethodBean testMethod : testMethods) {
-            smelly=false;
+            smelly = false;
             String textContent = testMethod.getTextContent();
             String[] lines = textContent.split("\n");
             for (String line : lines) {
@@ -65,35 +68,35 @@ public class StructuralDetector {
                     String definedPath = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")); //EXTRACT FILE PATH
                     for (MethodBean otherTestMethod : testMethods) {
                         if (!otherTestMethod.getName().equals(testMethod.getName()) && DetectionHelper.checkFileUsage(otherTestMethod, definedPath)) {
-                            smelly=true;
+                            smelly = true;
                             trwMethods.add(testMethod);
                             break;
                         }
                     }
                 }
-                if(smelly) break;
+                if (smelly) break;
             }
         }
         return trwMethods;
     }
 
 
-    public ArrayList<MethodBean> getFireAndForgetMethods(ClassBean pTestSuite){
-        boolean smelly=false;
+    public ArrayList<MethodBean> getFireAndForgetMethods(ClassBean pTestSuite) {
+        boolean smelly = false;
         ArrayList<MethodBean> fafMethods = new ArrayList<>();
-        for(MethodBean testMethod : pTestSuite.getMethods()){
+        for (MethodBean testMethod : pTestSuite.getMethods()) {
             Collection<MethodBean> calls = testMethod.getMethodCalls();
             String textContent = testMethod.getTextContent();
             String[] lines = textContent.split("\n");
-            for(MethodBean call : calls){
-                for(int k=0; k<lines.length; k++){
-                    if(lines[k].matches("\\s*" + call.getName() + "\\s*\\(.*") && lines[k+1].contains("Thread.sleep")){
-                        smelly=true;
+            for (MethodBean call : calls) {
+                for (int k = 0; k < lines.length; k++) {
+                    if (lines[k].matches("\\s*" + call.getName() + "\\s*\\(.*") && lines[k + 1].contains("Thread.sleep")) {
+                        smelly = true;
                         fafMethods.add(testMethod);
                         break;
                     }
                 }
-                if(smelly) break;
+                if (smelly) break;
             }
         }
         return fafMethods;
