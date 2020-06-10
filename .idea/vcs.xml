@@ -2,29 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/Achilles" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/alluxio" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/ambari" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/assertj-core" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/checkstyle" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/commons-exec" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/dropwizard" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/hadoop" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/handlebars.java" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/hbase" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/httpcore" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/jackrabbit-oak" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/jimfs" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/logback" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/ninja" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/okhttp" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/oozie" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/orbit" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/oryx" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/spring-boot" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/togglz" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/undertow" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/wro4j" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/resources/projects/zxing" vcs="Git" />
   </component>
 </project>

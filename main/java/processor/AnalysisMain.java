@@ -20,7 +20,7 @@ public class AnalysisMain {
                 if(flaky.getProject().equalsIgnoreCase(projectName))
                     flakyMethods.add(flaky);
             }
-            AnalysisOutput output = AnalysisComputation.compute(project, "resources/projects/" + projectName, flakyMethods);
+            AnalysisOutput output = AnalysisComputation.compute(project, System.getProperty("user.home") + "/FlakySmellStudy/" + projectName, flakyMethods);
             analysises.add(output);
             ReportManager.saveReport(analysises);
         }

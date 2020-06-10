@@ -40,14 +40,22 @@ public class StructuralDetector {
 
     public ArrayList<MethodBean> getIndirectTestingMethods(ClassBean pTestSuite, ClassBean pProductionClass, Collection<MethodBean> pMethods) {
         ArrayList<MethodBean> itMethods = new ArrayList<>();
+        boolean smelly;
         for (MethodBean testMethod : pTestSuite.getMethods()) {
+            smelly = false;
             Collection<MethodBean> calls = testMethod.getMethodCalls();
             if (calls != null && calls.size() > 0) {
                 for (MethodBean methodCall : testMethod.getMethodCalls()) {
                     if (!DetectionHelper.isInProductionClass(methodCall, pProductionClass)) {
-                        itMethods.add(testMethod);
-                        break;
+                        for (MethodBean prodMethod : pMethods) {
+                            if (methodCall.getName().equals(prodMethod.getName())) {
+                                itMethods.add(testMethod);
+                                smelly = true;
+                                break;
+                            }
+                        }
                     }
+                    if (smelly) break;
                 }
             }
 
@@ -85,7 +93,7 @@ public class StructuralDetector {
         boolean smelly;
         ArrayList<MethodBean> fafMethods = new ArrayList<>();
         for (MethodBean testMethod : pTestSuite.getMethods()) {
-            smelly=false;
+            smelly = false;
             Collection<MethodBean> calls = testMethod.getMethodCalls();
             String textContent = testMethod.getTextContent();
             String[] lines = textContent.split("\n");
