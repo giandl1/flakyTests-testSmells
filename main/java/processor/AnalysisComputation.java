@@ -1,27 +1,25 @@
 package processor;
 
 import beans.AnalysisOutput;
+import beans.FlakyCSVOutput;
 import beans.MethodAnalysisOutput;
 import beans.ProjectBean;
 import it.unisa.testSmellDiffusion.beans.ClassBean;
 import it.unisa.testSmellDiffusion.beans.MethodBean;
 import it.unisa.testSmellDiffusion.beans.PackageBean;
 import it.unisa.testSmellDiffusion.testMutation.TestMutationUtilities;
-import it.unisa.testSmellDiffusion.utility.FolderToJavaProjectConverter;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import testSmells.DetectionHelper;
 import testSmells.StructuralDetector;
 import utils.GitUtility;
 import utils.MultiModuleParser;
-import utils.ReportManager;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class AnalysisProcessor {
-    public static void compute(String gitURL, String workingDir) throws CoreException {
+public class AnalysisComputation {
+    public static AnalysisOutput compute(String gitURL, String workingDir, ArrayList<FlakyCSVOutput> flakyMethods) throws CoreException {
         try {
             GitUtility.getProjectFromGit(gitURL, workingDir, new TextProgressMonitor());
         } catch (Exception e) {
@@ -36,19 +34,22 @@ public class AnalysisProcessor {
         AnalysisOutput analysis = new AnalysisOutput();
         analysis.setProjectName(gitURL.split("/")[4].replace(".git", ""));
         ArrayList<MethodAnalysisOutput> allMethods = new ArrayList<>();
-        for (ClassBean prodClass : classes) {
-            ClassBean testClass = TestMutationUtilities.getTestClassBy(prodClass.getName(), testPackages);
-            if (testClass != null) {
+        for (ClassBean testClass : utils.getClasses(testPackages)) {
+            if (testClass != null && testClass.getTextContent().contains("@Test")) {
                 ArrayList<MethodBean> ctlMethods = detector.getConditionalTestLogicMethods(testClass);
                 ArrayList<MethodBean> fafMethods = detector.getFireAndForgetMethods(testClass);
-                for (MethodBean faf : fafMethods) System.out.println(faf.getName());
+                for (MethodBean faf : fafMethods) System.out.println(faf.getName() + "  " + faf.getBelongingClass().getName());
                 ArrayList<MethodBean> roMethods = detector.getResourceOptimismMethods(testClass);
                 ArrayList<MethodBean> trwMethods = detector.getTestRunWarMethods(testClass);
-                ArrayList<MethodBean> itMethods = detector.getIndirectTestingMethods(testClass, prodClass, DetectionHelper.findInvocations(packages));
+                ArrayList<MethodBean> itMethods = null;
+                ClassBean prodClass = TestMutationUtilities.getProductionClassBy(testClass.getName(), packages);
+                if (prodClass != null)
+                    itMethods = detector.getIndirectTestingMethods(testClass, prodClass, DetectionHelper.findInvocations(packages));
                 analysis.setCtlMethods(analysis.getCtlMethods() + ctlMethods.size());
                 analysis.setFafMethods(analysis.getFafMethods() + fafMethods.size());
                 analysis.setTrwMethods(analysis.getTrwMethods() + trwMethods.size());
-                analysis.setItMethods(analysis.getItMethods() + itMethods.size());
+                if (itMethods != null)
+                    analysis.setItMethods(analysis.getItMethods() + itMethods.size());
                 analysis.setRoMethods(analysis.getRoMethods() + roMethods.size());
                 for (MethodBean method : testClass.getMethods()) {
                     MethodAnalysisOutput methodAnalysis = new MethodAnalysisOutput();
@@ -57,18 +58,24 @@ public class AnalysisProcessor {
                     methodAnalysis.flagAsSmelly(roMethods, "ro");
                     methodAnalysis.flagAsSmelly(fafMethods, "faf");
                     methodAnalysis.flagAsSmelly(trwMethods, "trw");
-                    methodAnalysis.flagAsSmelly(itMethods, "it");
+                    if (itMethods != null)
+                        methodAnalysis.flagAsSmelly(itMethods, "it");
                     methodAnalysis.flagAsSmelly(ctlMethods, "ctl");
+                    for (FlakyCSVOutput flaky : flakyMethods) {
+                        if (flaky.getTestClass().equalsIgnoreCase(testClass.getBelongingPackage() + "." + testClass.getName())
+                                && method.getName().equalsIgnoreCase(flaky.getTestName())) {
+                            methodAnalysis.setFlaky(true);
+                            analysis.setFlakyMethods(analysis.getFlakyMethods() + 1);
+                        }
+                    }
+                    if (methodAnalysis.isCoOccurrentFlakySmell())
+                        analysis.setFlakySmellyMethods(analysis.getFlakySmellyMethods() + 1);
                     allMethods.add(methodAnalysis);
                 }
 
             }
         }
         analysis.setMethodsAnalysis(allMethods);
-        System.out.println(allMethods.size());
-        ArrayList<AnalysisOutput> analysises = new ArrayList<>();
-        analysises.add(analysis);
-        ReportManager.saveReport(analysises);
         System.out.println("PROJECT: " + analysis.getProjectName());
         System.out.println("SMELLY METHODS: " + analysis.getSmellyMethods());
         System.out.println("Resource Optimism Methods: " + analysis.getRoMethods());
@@ -77,6 +84,8 @@ public class AnalysisProcessor {
         System.out.println("Fire and Forget Methods: " + analysis.getFafMethods());
         System.out.println("Conditional Test Logic Methods: " + analysis.getCtlMethods());
         System.out.println("Flaky Tests: " + analysis.getFlakyMethods());
+        System.out.println("Flaky and smelly tests: " + analysis.getFlakySmellyMethods());
+        return analysis;
 
     }
 }

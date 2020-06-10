@@ -82,9 +82,10 @@ public class StructuralDetector {
 
 
     public ArrayList<MethodBean> getFireAndForgetMethods(ClassBean pTestSuite) {
-        boolean smelly = false;
+        boolean smelly;
         ArrayList<MethodBean> fafMethods = new ArrayList<>();
         for (MethodBean testMethod : pTestSuite.getMethods()) {
+            smelly=false;
             Collection<MethodBean> calls = testMethod.getMethodCalls();
             String textContent = testMethod.getTextContent();
             String[] lines = textContent.split("\n");

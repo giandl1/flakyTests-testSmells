@@ -33,6 +33,33 @@ public class MultiModuleParser {
                                         if (mainOk && testOk) break;
                                     }
                                 }
+                            } else if (f2 != null) {
+                                boolean mainsubOk = false;
+                                boolean testsubOk = false;
+                                File[] sub3 = f2.listFiles();
+                                if(sub3 != null){
+                                    for(File f4 : sub3){
+                                       if(f4 != null && f4.getName().equalsIgnoreCase("src")){
+                                           File[] sub4 = f4.listFiles();
+                                           if(sub4 != null){
+                                               for(File f5 : sub4){
+                                                   if (f5 != null && f5.getName().equalsIgnoreCase("main"))
+                                                       mainsubOk = true;
+                                                   if (f5 != null && f5.getName().equalsIgnoreCase("test"))
+                                                       testsubOk = true;
+                                                   if (mainsubOk && testsubOk) break;
+                                               }
+                                           }
+                                       }
+                                    }
+                                }
+                                if(mainsubOk && testsubOk){
+                                    Vector<PackageBean> modulePackages = FolderToJavaProjectConverter.convert(f2.getAbsolutePath() + "/src/main");
+                                    Vector<PackageBean> moduleTestPackages = FolderToJavaProjectConverter.convert(f2.getAbsolutePath() + "/src/test");
+                                    packages.addAll(modulePackages);
+                                    testPackages.addAll(moduleTestPackages);
+                                }
+
                             }
                             if (mainOk && testOk) {
                                 Vector<PackageBean> modulePackages = FolderToJavaProjectConverter.convert(f.getAbsolutePath() + "/src/main");

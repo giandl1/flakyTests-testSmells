@@ -92,7 +92,7 @@ public class MethodAnalysisOutput {
         }
     }
 
-    public boolean CoOccurrenceFlakySmell(){
+    public boolean isCoOccurrentFlakySmell(){
         return isSmelly() && this.isFlaky;
     }
 
