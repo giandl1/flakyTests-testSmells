@@ -3,6 +3,8 @@ package processor;
 
 import beans.AnalysisOutput;
 import beans.FlakyCSVOutput;
+import beans.MethodAnalysisOutput;
+import beans.StatisticalOutput;
 import utils.CSVParser;
 import utils.ReportManager;
 
@@ -24,6 +26,14 @@ public class AnalysisMain {
             analysises.add(output);
             ReportManager.saveReport(analysises);
         }
+        ArrayList<MethodAnalysisOutput> allMethods = new ArrayList<>();
+        for(AnalysisOutput analysis : analysises){
+            ArrayList<MethodAnalysisOutput> methods = analysis.getMethodsAnalysis();
+            allMethods.addAll(methods);
+        }
+        StatisticalOutput output = new StatisticalAnalysis().getStats(allMethods);
+        System.out.println(output.toString());
+
     }
 }
 

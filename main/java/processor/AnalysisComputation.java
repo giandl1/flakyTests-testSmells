@@ -38,7 +38,6 @@ public class AnalysisComputation {
             if (testClass != null && testClass.getTextContent().contains("@Test")) {
                 ArrayList<MethodBean> ctlMethods = detector.getConditionalTestLogicMethods(testClass);
                 ArrayList<MethodBean> fafMethods = detector.getFireAndForgetMethods(testClass);
-                for (MethodBean faf : fafMethods) System.out.println(faf.getName() + "  " + faf.getBelongingClass().getName());
                 ArrayList<MethodBean> roMethods = detector.getResourceOptimismMethods(testClass);
                 ArrayList<MethodBean> trwMethods = detector.getTestRunWarMethods(testClass);
                 ArrayList<MethodBean> itMethods = null;
