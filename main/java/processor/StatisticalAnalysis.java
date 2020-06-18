@@ -29,7 +29,7 @@ public class StatisticalAnalysis {
         }
         double methodsNumber = methods.size();
         StatisticalOutput output = new StatisticalOutput();
-        output.setCtlFlakyRate(round(ctlFlaky/methodsNumber, 5));
+        output.setCtlFlakyRate(round(ctlFlaky/methodsNumber, 5)); //nr. flaky tests totale
         output.setFafFlakyRate(round(fafFlaky/methodsNumber, 5));
         output.setItFlakyRate(round(itFlaky/methodsNumber, 5));
         output.setRoFlakyRate(round(roFlaky/methodsNumber, 5));
