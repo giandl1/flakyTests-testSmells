@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class AnalysisComputation {
-    public static AnalysisOutput compute(String gitURL, String workingDir, ArrayList<FlakyCSVOutput> flakyMethods) throws CoreException {
+    public static AnalysisOutput compute(String gitURL, String rev, String workingDir, ArrayList<FlakyCSVOutput> flakyMethods) throws CoreException {
         try {
-            GitUtility.getProjectFromGit(gitURL, workingDir, new TextProgressMonitor());
+            GitUtility.getProjectFromGit(gitURL, rev, workingDir);
         } catch (Exception e) {
             System.out.println("PROJECT ALREADY FOUND IN FILESYSTEM");
         }
@@ -32,7 +32,9 @@ public class AnalysisComputation {
         ArrayList<ClassBean> classes = utils.getClasses(packages);
         StructuralDetector detector = new StructuralDetector();
         AnalysisOutput analysis = new AnalysisOutput();
-        analysis.setProjectName(gitURL.split("/")[4].replace(".git", ""));
+        String projectName = gitURL.split("/")[4].replace(".git", "");
+
+        analysis.setProjectName(projectName);
         ArrayList<MethodAnalysisOutput> allMethods = new ArrayList<>();
         for (ClassBean testClass : utils.getClasses(testPackages)) {
             if (testClass != null && testClass.getTextContent().contains("@Test")) {
@@ -54,6 +56,7 @@ public class AnalysisComputation {
                     MethodAnalysisOutput methodAnalysis = new MethodAnalysisOutput();
                     methodAnalysis.setBelongingClass(method.getBelongingClass().getBelongingPackage() + "." + method.getBelongingClass().getName());
                     methodAnalysis.setName(method.getName());
+                    methodAnalysis.setBelongingProjectRev(projectName + "/" + rev);
                     methodAnalysis.flagAsSmelly(roMethods, "ro");
                     methodAnalysis.flagAsSmelly(fafMethods, "faf");
                     methodAnalysis.flagAsSmelly(trwMethods, "trw");

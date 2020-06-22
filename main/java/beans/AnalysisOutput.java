@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class AnalysisOutput {
     private String projectName;
     private String projectGitAddress;
+    private String projectRevision;
     private ArrayList<MethodAnalysisOutput> methodsAnalysis;
     private int roMethods;
     private int fafMethods;
@@ -14,6 +15,14 @@ public class AnalysisOutput {
     private int smellyMethods;
     private int flakyMethods;
     private int flakySmellyMethods;
+
+    public String getProjectRevision() {
+        return projectRevision;
+    }
+
+    public void setProjectRevision(String projectRevision) {
+        this.projectRevision = projectRevision;
+    }
 
     public String getProjectName() {
         return projectName;

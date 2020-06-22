@@ -2,38 +2,44 @@ package processor;
 
 import beans.MethodAnalysisOutput;
 import beans.StatisticalOutput;
+import utils.ReportManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class StatisticalAnalysis {
-    public StatisticalOutput getStats(ArrayList<MethodAnalysisOutput> methods){
+    public StatisticalOutput getStats(ArrayList<MethodAnalysisOutput> methods) {
         double roFlaky = 0;
         double itFlaky = 0;
         double ctlFlaky = 0;
         double fafFlaky = 0;
         double trwFlaky = 0;
+        ArrayList<MethodAnalysisOutput> flakyAndSmelly = new ArrayList<>();
+        for (MethodAnalysisOutput method : methods)
+            if (method.isSmelly())
+                flakyAndSmelly.add(method);
 
-        for(MethodAnalysisOutput method : methods){
-            if(method.isFlaky() && method.isConditionalTestLogic())
+        for (MethodAnalysisOutput method : flakyAndSmelly) {
+            if (method.isFlaky() && method.isConditionalTestLogic())
                 ctlFlaky++;
-            if(method.isFlaky() && method.isFireAndForget())
+            if (method.isFlaky() && method.isFireAndForget())
                 fafFlaky++;
-            if(method.isFlaky() && method.isTestRunWar())
+            if (method.isFlaky() && method.isTestRunWar())
                 trwFlaky++;
-            if(method.isFlaky() && method.isIndirectTesting())
+            if (method.isFlaky() && method.isIndirectTesting())
                 itFlaky++;
-            if(method.isFlaky() && method.isResourceOptimism())
+            if (method.isFlaky() && method.isResourceOptimism())
                 roFlaky++;
         }
         double methodsNumber = methods.size();
         StatisticalOutput output = new StatisticalOutput();
-        output.setCtlFlakyRate(round(ctlFlaky/methodsNumber, 5)); //nr. flaky tests totale
-        output.setFafFlakyRate(round(fafFlaky/methodsNumber, 5));
-        output.setItFlakyRate(round(itFlaky/methodsNumber, 5));
-        output.setRoFlakyRate(round(roFlaky/methodsNumber, 5));
-        output.setTrwFlakyRate(round(trwFlaky/methodsNumber, 5));
+        output.setCtlFlakyRate(round(ctlFlaky / methodsNumber, 5)); //nr. flaky tests totale
+        output.setFafFlakyRate(round(fafFlaky / methodsNumber, 5));
+        output.setItFlakyRate(round(itFlaky / methodsNumber, 5));
+        output.setRoFlakyRate(round(roFlaky / methodsNumber, 5));
+        output.setTrwFlakyRate(round(trwFlaky / methodsNumber, 5));
+        ReportManager.smallReport(flakyAndSmelly);
         return output;
     }
 

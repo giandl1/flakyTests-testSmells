@@ -28,4 +28,13 @@ public class FlakyCSVOutput {
     public void setTestName(String testName) {
         this.testName = testName;
     }
+
+    @Override
+    public String toString() {
+        return "FlakyCSVOutput{" +
+                "project='" + project + '\'' +
+                ", testClass='" + testClass + '\'' +
+                ", testName='" + testName + '\'' +
+                '}';
+    }
 }

@@ -27,4 +27,19 @@ public class ReportManager {
         FileUtility.writeFile(output.toString(), outputDir + "/" + fileName);
 
     }
+
+    public static void smallReport(ArrayList<MethodAnalysisOutput> methods) {
+        String fileName = new SimpleDateFormat("yyyyMMddHHmm'.csv'").format(new Date());
+        String outputDir = "reports/onlyFlakyAndSmelly";
+        StringBuilder output = new StringBuilder("PROJECT,CLASS,METHOD,RO,IT,TRW,FAF,CTL,FLAKY\n");
+        for (MethodAnalysisOutput method : methods) {
+            output.append(method.getBelongingProjectRev()).append(",").append(method.getBelongingClass()).append(",").append(method.getName()).append(",").append(method.isResourceOptimism()).append(",").append(method.isIndirectTesting()).append(",").append(method.isTestRunWar()).append(",").append(method.isFireAndForget()).append(",").append(method.isConditionalTestLogic()).append(",").append(method.isFlaky()).append("\n");
+        }
+        File out = new File(outputDir);
+        if (!out.exists() && !out.mkdirs())
+            return;
+        FileUtility.writeFile(output.toString(), outputDir + "/" + fileName);
+
+    }
 }
+

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class MethodAnalysisOutput {
     private String name;
     private String belongingClass;
+    private String belongingProjectRev;
     private boolean isResourceOptimism;
     private boolean isIndirectTesting;
     private boolean isTestRunWar;
@@ -14,6 +15,13 @@ public class MethodAnalysisOutput {
     private boolean isConditionalTestLogic;
     private boolean isFlaky;
 
+    public String getBelongingProjectRev() {
+        return belongingProjectRev;
+    }
+
+    public void setBelongingProjectRev(String belongingProjectRev) {
+        this.belongingProjectRev = belongingProjectRev;
+    }
 
     public boolean isResourceOptimism() {
         return isResourceOptimism;

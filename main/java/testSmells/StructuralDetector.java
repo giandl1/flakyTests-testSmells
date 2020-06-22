@@ -46,12 +46,14 @@ public class StructuralDetector {
             Collection<MethodBean> calls = testMethod.getMethodCalls();
             if (calls != null && calls.size() > 0) {
                 for (MethodBean methodCall : testMethod.getMethodCalls()) {
-                    if (!DetectionHelper.isInProductionClass(methodCall, pProductionClass)) {
-                        for (MethodBean prodMethod : pMethods) {
-                            if (methodCall.getName().equals(prodMethod.getName())) {
-                                itMethods.add(testMethod);
-                                smelly = true;
-                                break;
+                    if (!methodCall.getName().startsWith("get") && !methodCall.getName().startsWith("set")) {
+                        if (!DetectionHelper.isInProductionClass(methodCall, pProductionClass)) {
+                            for (MethodBean prodMethod : pMethods) {
+                                if (methodCall.getName().equals(prodMethod.getName())) {
+                                    itMethods.add(testMethod);
+                                    smelly = true;
+                                    break;
+                                }
                             }
                         }
                     }
