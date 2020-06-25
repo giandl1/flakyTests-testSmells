@@ -8,6 +8,16 @@ public class StatisticalOutput {
     private BigDecimal trwFlakyRate;
     private BigDecimal itFlakyRate;
     private BigDecimal ctlFlakyRate;
+    private BigDecimal smellyFlaky;
+
+
+    public BigDecimal getSmellyFlaky() {
+        return smellyFlaky;
+    }
+
+    public void setSmellyFlaky(BigDecimal smellyFlaky) {
+        this.smellyFlaky = smellyFlaky;
+    }
 
     public BigDecimal getRoFlakyRate() {
         return roFlakyRate;
@@ -57,6 +67,7 @@ public class StatisticalOutput {
                 ", trwFlakyRate=" + trwFlakyRate +
                 ", itFlakyRate=" + itFlakyRate +
                 ", ctlFlakyRate=" + ctlFlakyRate +
+                ", smellyFlaky=" + smellyFlaky +
                 '}';
     }
 }

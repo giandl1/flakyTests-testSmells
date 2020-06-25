@@ -56,6 +56,8 @@ public class AnalysisComputation {
                     MethodAnalysisOutput methodAnalysis = new MethodAnalysisOutput();
                     methodAnalysis.setBelongingClass(method.getBelongingClass().getBelongingPackage() + "." + method.getBelongingClass().getName());
                     methodAnalysis.setName(method.getName());
+                    if (prodClass != null)
+                        methodAnalysis.setProdClass(prodClass.getBelongingPackage() + "." + prodClass.getName());
                     methodAnalysis.setBelongingProjectRev(projectName + "/" + rev);
                     methodAnalysis.flagAsSmelly(roMethods, "ro");
                     methodAnalysis.flagAsSmelly(fafMethods, "faf");

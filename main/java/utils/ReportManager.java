@@ -17,7 +17,7 @@ public class ReportManager {
         StringBuilder output = new StringBuilder("PROJECT,CLASS,METHOD,RO,IT,TRW,FAF,CTL,FLAKY\n");
         for (AnalysisOutput analysis : analysises) {
             for (MethodAnalysisOutput method : analysis.getMethodsAnalysis()) {
-                output.append(analysis.getProjectName()).append(",").append(method.getBelongingClass()).append(",").append(method.getName()).append(",").append(method.isResourceOptimism()).append(",").append(method.isIndirectTesting()).append(",").append(method.isTestRunWar()).append(",").append(method.isFireAndForget()).append(",").append(method.isConditionalTestLogic()).append(",").append(method.isFlaky()).append("\n");
+                output.append(method.getBelongingProjectRev()).append(",").append(method.getBelongingClass()).append(",").append(method.getName()).append(",").append(method.isResourceOptimism()).append(",").append(method.isIndirectTesting()).append(",").append(method.isTestRunWar()).append(",").append(method.isFireAndForget()).append(",").append(method.isConditionalTestLogic()).append(",").append(method.isFlaky()).append("\n");
 
             }
         }

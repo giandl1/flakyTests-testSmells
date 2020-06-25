@@ -15,12 +15,16 @@ public class StatisticalAnalysis {
         double ctlFlaky = 0;
         double fafFlaky = 0;
         double trwFlaky = 0;
+        double smellyFlaky = 0;
         ArrayList<MethodAnalysisOutput> flakyAndSmelly = new ArrayList<>();
         for (MethodAnalysisOutput method : methods)
             if (method.isSmelly())
                 flakyAndSmelly.add(method);
+        System.out.println(flakyAndSmelly.size());
 
         for (MethodAnalysisOutput method : flakyAndSmelly) {
+            if(method.isSmelly() && method.isFlaky())
+                smellyFlaky++;
             if (method.isFlaky() && method.isConditionalTestLogic())
                 ctlFlaky++;
             if (method.isFlaky() && method.isFireAndForget())
@@ -32,13 +36,16 @@ public class StatisticalAnalysis {
             if (method.isFlaky() && method.isResourceOptimism())
                 roFlaky++;
         }
+        System.out.println(smellyFlaky);
         double methodsNumber = methods.size();
+        System.out.println(methodsNumber);
         StatisticalOutput output = new StatisticalOutput();
-        output.setCtlFlakyRate(round(ctlFlaky / methodsNumber, 5)); //nr. flaky tests totale
-        output.setFafFlakyRate(round(fafFlaky / methodsNumber, 5));
-        output.setItFlakyRate(round(itFlaky / methodsNumber, 5));
-        output.setRoFlakyRate(round(roFlaky / methodsNumber, 5));
-        output.setTrwFlakyRate(round(trwFlaky / methodsNumber, 5));
+        output.setCtlFlakyRate(round(ctlFlaky / methodsNumber, 5).multiply(new BigDecimal(100))); //nr. flaky tests totale
+        output.setFafFlakyRate(round(fafFlaky / methodsNumber, 5).multiply(new BigDecimal(100)));
+        output.setItFlakyRate(round(itFlaky / methodsNumber, 5).multiply(new BigDecimal(100)));
+        output.setRoFlakyRate(round(roFlaky / methodsNumber, 5).multiply(new BigDecimal(100)));
+        output.setTrwFlakyRate(round(trwFlaky / methodsNumber, 5).multiply(new BigDecimal(100)));
+        output.setSmellyFlaky(round(smellyFlaky/methodsNumber,5).multiply(new BigDecimal(100)));
         ReportManager.smallReport(flakyAndSmelly);
         return output;
     }

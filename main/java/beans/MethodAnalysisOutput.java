@@ -8,6 +8,7 @@ public class MethodAnalysisOutput {
     private String name;
     private String belongingClass;
     private String belongingProjectRev;
+    private String prodClass;
     private boolean isResourceOptimism;
     private boolean isIndirectTesting;
     private boolean isTestRunWar;
@@ -17,6 +18,14 @@ public class MethodAnalysisOutput {
 
     public String getBelongingProjectRev() {
         return belongingProjectRev;
+    }
+
+    public String getProdClass() {
+        return prodClass;
+    }
+
+    public void setProdClass(String prodClass) {
+        this.prodClass = prodClass;
     }
 
     public void setBelongingProjectRev(String belongingProjectRev) {
@@ -33,7 +42,25 @@ public class MethodAnalysisOutput {
         return isIndirectTesting;
     }
 
+    public void setResourceOptimism(boolean resourceOptimism) {
+        isResourceOptimism = resourceOptimism;
+    }
 
+    public void setIndirectTesting(boolean indirectTesting) {
+        isIndirectTesting = indirectTesting;
+    }
+
+    public void setTestRunWar(boolean testRunWar) {
+        isTestRunWar = testRunWar;
+    }
+
+    public void setFireAndForget(boolean fireAndForget) {
+        isFireAndForget = fireAndForget;
+    }
+
+    public void setConditionalTestLogic(boolean conditionalTestLogic) {
+        isConditionalTestLogic = conditionalTestLogic;
+    }
 
     public boolean isTestRunWar() {
         return isTestRunWar;
